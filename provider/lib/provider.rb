@@ -1,10 +1,25 @@
 require 'sinatra/base'
 require 'json'
 
+ANIMALS_LIST = [
+  {
+    name: "Buddy",
+    image: "dog"
+  },
+  {
+    name: "Cathy",
+    image: "cat"
+  },
+  {
+    name: "Birdy",
+    image: "bird"
+  }
+]
+
 class ProviderData
-  @data_count = 1000
+  @animals = ANIMALS_LIST
   class << self
-    attr_accessor :data_count
+    attr_accessor :animals
   end
 end
 
@@ -13,7 +28,7 @@ class Provider < Sinatra::Base
   get '/provider.json', :provides => 'json' do
     if params[:valid_date].nil?
       [400, '"valid_date is required"']
-    elsif ProviderData.data_count == 0
+    elsif ProviderData.animals.size == 0
       404
     else
       begin
@@ -21,7 +36,7 @@ class Provider < Sinatra::Base
         JSON.pretty_generate({
           :test => 'NO',
           :valid_date => DateTime.now,
-          :count => ProviderData.data_count
+          :animals => ProviderData.animals
         })
       rescue ArgumentError => e
         [400, "\"\'#{params[:valid_date]}\' is not a date\""]
