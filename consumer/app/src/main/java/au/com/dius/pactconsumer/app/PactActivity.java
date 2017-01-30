@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import au.com.dius.pactconsumer.app.di.ActivityComponent;
 import au.com.dius.pactconsumer.app.di.DaggerActivityComponent;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class PactActivity extends AppCompatActivity {
 
   private ActivityComponent activityComponent;
 
