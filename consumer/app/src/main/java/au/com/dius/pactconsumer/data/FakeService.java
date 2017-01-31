@@ -17,7 +17,11 @@ public class FakeService implements Repository {
   private static final List<Animal> ANIMALS_LIST;
 
   static {
-      ANIMALS_LIST = Arrays.asList();
+      ANIMALS_LIST = Arrays.asList(
+          Animal.create("Doggy", "dog"),
+          Animal.create("Cathy", "cat"),
+          Animal.create("Birdy", "bird")
+      );
   }
 
   @Inject

@@ -3,27 +3,29 @@ package au.com.dius.pactconsumer.data.model;
 
 import android.support.annotation.NonNull;
 
+import com.squareup.moshi.Json;
+
 public class Animal {
 
-  private String name;
-  private String type;
+  @Json(name = "name")
+  private final String name;
+
+  @Json(name = "type")
+  private final String type;
+
+  public Animal(@NonNull String name, @NonNull String type) {
+    this.name = name;
+    this.type = type;
+  }
 
   @NonNull
   public String getName() {
     return name;
   }
 
-  public void setName(@NonNull String name) {
-    this.name = name;
-  }
-
   @NonNull
   public String getType() {
     return type;
-  }
-
-  public void setType(@NonNull String type) {
-    this.type = type;
   }
 
   @Override
@@ -53,4 +55,7 @@ public class Animal {
         '}';
   }
 
+  public static Animal create(@NonNull String doggy, @NonNull String dog) {
+    return new Animal(doggy, dog);
+  }
 }

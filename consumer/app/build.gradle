@@ -28,6 +28,11 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  lintOptions {
+    abortOnError true
+    warning 'InvalidPackage' // Note: issue with okio: https://github.com/square/okio/issues/58
+  }
 }
 
 dependencies {

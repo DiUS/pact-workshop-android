@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.List;
 
 import au.com.dius.pactconsumer.data.model.Animal;
-import io.reactivex.Observer;
 import io.reactivex.observers.TestObserver;
 
 public class FakeServiceTest {
@@ -25,7 +24,7 @@ public class FakeServiceTest {
 
     // then
     observer.assertNoErrors();
-    observer.assertValueCount(3);
+    observer.assertValueAt(0, animals -> animals.size() == 3);
   }
 
 }
