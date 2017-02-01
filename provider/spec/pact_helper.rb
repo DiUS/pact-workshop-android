@@ -12,7 +12,13 @@ Pact.provider_states_for "our_consumer" do
 
   provider_state "data count is > 0" do
     set_up do
-      # Your set up code goes here
+      ProviderData.animals = ANIMALS_LIST
+    end
+  end
+
+  provider_state "data count is == 0" do
+    set_up do
+      ProviderData.animals = []
     end
   end
 

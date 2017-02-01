@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import org.joda.time.DateTime;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +23,7 @@ import retrofit2.http.Query;
 public class Service implements Repository {
 
   private static final int BAD_REQUEST = 400;
+  private static final int NOT_FOUND = 404;
 
   public interface Api {
     @GET("provider.json")
@@ -52,7 +54,9 @@ public class Service implements Repository {
     }
 
     HttpException exception = (HttpException) throwable;
-    if (exception.code() == BAD_REQUEST) {
+    if (exception.code() == NOT_FOUND) {
+      return Single.just(new ServiceResponse(null, Collections.emptyList()));
+    } else if (exception.code() == BAD_REQUEST) {
       return Single.error(new BadRequestException(exception.message(), exception));
     }
     return Single.error(throwable);

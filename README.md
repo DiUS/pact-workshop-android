@@ -709,4 +709,117 @@ end
 
 Now the pact verification all passes.
 
+## Step 10 - Provider states
+
+We have one final thing to test for. We need to handle when there is no animals. This is an important bit of information to add to our contract. Let us start with a
+consumer test for this.
+
+ServiceNoContentPactTest.java:
+
+```java
+public class ServiceNoContentPactTest {
+
+  static final DateTime DATE_TIME;
+
+  static {
+    DATE_TIME = DateTime.now();
+  }
+
+  Service service;
+
+  @Before
+  public void setUp() {
+    NetworkModule networkModule = new NetworkModule();
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class));
+  }
+
+  @Rule
+  public PactProviderRule mockProvider = new PactProviderRule("our_provider", "localhost", 9292, this);
+
+  @Pact(provider = "our_provider", consumer = "our_consumer")
+  public PactFragment createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
+    return builder
+        .given("data count is == 0")
+        .uponReceiving("a request for json data")
+        .path("/provider.json")
+        .method("GET")
+        .query("valid_date=" + DateHelper.encodeDate(DATE_TIME))
+        .willRespondWith()
+        .status(404)
+        .toFragment();
+  }
+
+  @Test
+  @PactVerification("our_provider")
+  public void should_process_the_json_payload_from_provider() {
+    TestObserver<ServiceResponse> observer = service.fetchResponse(DATE_TIME).test();
+    observer.assertNoErrors();
+    observer.assertValue(new ServiceResponse(null, Collections.emptyList()));
+  }
+}
+
+```json
+{
+	"description": "a request for json data",
+	"request": {
+		"method": "GET",
+		"path": "/provider.json",
+		"query": "valid_date=2017-02-01T20%253A50%253A45.397%252B11%253A00"
+	},
+	"response": {
+		"status": 404
+	},
+	"providerState": "data count is == 0"
+},
+```
+
+To be able to verify out provider, we create a data class that the provider can use, and then set the data in
+the state change setup callback.
+
+lib/provider.rb:
+
+```ruby
+class Provider < Sinatra::Base
+
+  get '/provider.json', :provides => 'json' do
+    if params[:valid_date].nil?
+      [400, '"valid_date is required"']
+    elsif ProviderData.animals.size == 0
+      404
+    else
+	  valid_time = Time.parse(params[:valid_date])
+	  JSON.pretty_generate({
+		:test => 'NO',
+		:valid_date => DateTime.now,
+		:animals => ProviderData.animals
+	  })
+    end
+  end
+
+end
+```
+
+Now we can set the data count appropriately.
+
+spec/pact_helper.rb:
+
+```ruby
+Pact.provider_states_for "our_consumer" do
+
+  provider_state "data count is > 0" do
+    set_up do
+      ProviderData.animals = ANIMALS_LIST
+    end
+  end
+
+  provider_state "data count is == 0" do
+    set_up do
+      ProviderData.animals = []
+    end
+  end
+
+end
+```
+
+Running the provider verification passes. Awesome, we are all done.
 
