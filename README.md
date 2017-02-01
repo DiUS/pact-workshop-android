@@ -22,7 +22,7 @@ You will need to have the following items installed for you to run through the w
 
 ## Step 1 - Simple customer calling Provider
 
-Given we have a client that needs to make a HTTP GET request to a sinatra webapp, and requires a response in JSON format. The client would look something like:
+Given we have a android app that needs to make a HTTP GET request to a sinatra webapp, and requires a response in JSON format. The client would look something like:
 
 Service.java:
 
@@ -45,17 +45,16 @@ public class Service implements Repository {
   @Override
   public Single<ServiceResponse> fetchResponse(@NonNull DateTime dateTime) {
     try {
-      return api.loadProviderJson(DateHelper.encodeDate(dateTime))
+      return api.loadProviderJson(DateHelper.encodeDate(dateTime));
     } catch (UnsupportedEncodingException e) {
       return Single.error(e);
     }
   }
+
 }
 ```
 
-and the reponse:
-
-ServiceResponse.java:
+and the reponse ServiceResponse.java:
 
 ```java
 public class ServiceResponse {
@@ -63,7 +62,7 @@ public class ServiceResponse {
   @Json(name = "date")
   private final DateTime validDate;
 
-  @Json(name = "animals")
+  @Json(name = "data")
   private final List<Animal> animals;
 
   public ServiceResponse(@Nullable DateTime validDate,
@@ -84,26 +83,20 @@ public class ServiceResponse {
 ...
 ```
 
-and the provider:
-provider.rb
+and the provider provider.rb:
 
 ```ruby
-    require 'sinatra/base'
-    require 'json'
+class Provider < Sinatra::Base
 
+  get '/provider.json', :provides => 'json' do
+      valid_time = Time.parse(params[:valid_date])
+      JSON.pretty_generate({
+        :test => 'NO',
+        :valid_date => DateTime.now,
+        :animals => ProviderData.animals
+      })
+  end
 
-    class Provider < Sinatra::Base
-
-
-      get '/provider.json', :provides => 'json' do
-        valid_time = Time.parse(params[:valid_date])
-        JSON.pretty_generate({
-          :test => 'NO',
-          :valid_date => DateTime.now,
-          :animals => [{ name: "Doggy", image: "dog" }]
-        })
-      end
-
-    end
+end
 ```
 
