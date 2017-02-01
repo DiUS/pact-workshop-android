@@ -8,3 +8,12 @@ Pact.service_provider "our_provider" do
 
 end
 
+Pact.provider_states_for "our_consumer" do
+
+  provider_state "data count is > 0" do
+    set_up do
+      # Your set up code goes here
+    end
+  end
+
+end
