@@ -574,6 +574,25 @@ public class ServicePactTest {
 Re-run the tests will now generate an updated pact file.
 
 ```console
-TODO
+$ ./gradlew clean testDebugUnitTest
+...
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_empty_when_fetch_returns_nothing PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_error_when_fetch_fails PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loaded_when_fetch_succeeds PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loading_when_fetching PASSED
+
+au.com.dius.pactconsumer.data.ServiceTest > should_process_json_payload_from_provider PASSED
+
+au.com.dius.pactconsumer.data.FakeServiceTest > should_return_list_of_animals PASSED
+
+au.com.dius.pactconsumer.data.ServicePactTest > should_process_the_json_payload_from_provider PASSED
+
+BUILD SUCCESSFUL
+
+Total time: 21.269 secs
 ```
 
