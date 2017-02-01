@@ -20,7 +20,6 @@ public class FakeService implements Repository {
 
   static {
     RESPONSE = new ServiceResponse(
-        "NO",
         DateTime.now(),
         Arrays.asList(
             Animal.create("Doggy", "dog"),

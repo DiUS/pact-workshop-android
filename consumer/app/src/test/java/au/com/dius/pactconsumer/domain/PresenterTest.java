@@ -1,6 +1,5 @@
 package au.com.dius.pactconsumer.domain;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -63,7 +62,7 @@ public class PresenterTest {
   @Test
   public void should_show_empty_when_fetch_returns_nothing() {
     // given
-    when(repository.fetchResponse(any())).thenReturn(Single.just(new ServiceResponse("", DateTime.now(), Collections.emptyList())));
+    when(repository.fetchResponse(any())).thenReturn(Single.just(new ServiceResponse(null, Collections.emptyList())));
 
     // when
     presenter.onStart();

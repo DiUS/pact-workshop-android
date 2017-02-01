@@ -31,16 +31,12 @@ class Provider < Sinatra::Base
     elsif ProviderData.animals.size == 0
       404
     else
-      begin
-        valid_time = Time.parse(params[:valid_date])
-        JSON.pretty_generate({
-          :test => 'NO',
-          :valid_date => DateTime.now,
-          :animals => ProviderData.animals
-        })
-      rescue ArgumentError => e
-        [400, "\"\'#{params[:valid_date]}\' is not a date\""]
-      end
+      valid_time = Time.parse(params[:valid_date])
+      JSON.pretty_generate({
+        :test => 'NO',
+        :valid_date => DateTime.now,
+        :animals => ProviderData.animals
+      })
     end
   end
 

@@ -31,7 +31,7 @@ public class ServiceTest {
   @Test
   public void should_process_json_payload_from_provider() {
     // given
-    String dateTimeJson = "2017-02-01T12:23+11:00";
+    String dateTimeJson = "2017-02-01T12:23:20+11:00";
     DateTime dateTime = DateHelper.parse(dateTimeJson);
     when(api.loadProviderJson(any())).thenReturn(
         Single.just(
@@ -53,7 +53,7 @@ public class ServiceTest {
 
     // then
     observer.assertNoErrors();
-    observer.assertValue(new ServiceResponse("NO", dateTime, Collections.singletonList(Animal.create("Doggy", "dog"))));
+    observer.assertValue(new ServiceResponse(dateTime, Collections.singletonList(Animal.create("Doggy", "dog"))));
   }
 
 }
