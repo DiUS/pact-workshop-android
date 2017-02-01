@@ -9,13 +9,14 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.PactProviderRule;
 import au.com.dius.pact.consumer.PactVerification;
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.PactFragment;
 import au.com.dius.pactconsumer.app.di.NetworkModule;
@@ -30,24 +31,12 @@ public class ServicePactTest {
 
   static final DateTime DATE_TIME;
   static final Map<String, String> HEADERS;
-  static final String JSON;
 
   static {
-    DATE_TIME = DateTime.now();
+    DATE_TIME = DateHelper.parse("2017-02-01T20:23:25.275+11:00");
 
     HEADERS = new HashMap<>();
     HEADERS.put("Content-Type", "application/json");
-
-    JSON = "{\n" +
-        "      \"test\": \"NO\",\n" +
-        "      \"date\": \"" + DateHelper.toString(DATE_TIME) + "\",\n" +
-        "      \"data\": [\n" +
-        "        {\n" +
-        "          \"name\": \"Doggy\",\n" +
-        "          \"image\": \"dog\"\n" +
-        "        }\n" +
-        "      ]\n" +
-        "}";
   }
 
   Service service;
@@ -63,6 +52,16 @@ public class ServicePactTest {
 
   @Pact(provider = "our_provider", consumer = "our_consumer")
   public PactFragment createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
+    PactDslJsonBody body = new PactDslJsonBody()
+        .stringType("test")
+        .stringType("valid_date", DateHelper.toString(DATE_TIME))
+        .eachLike("animals", 3)
+        .stringType("name", "Doggy")
+        .stringType("image", "dog")
+        .closeObject()
+        .closeArray()
+        .asBody();
+
     return builder
         .given("data count is > 0")
         .uponReceiving("a request for json data")
@@ -72,7 +71,7 @@ public class ServicePactTest {
         .willRespondWith()
         .status(200)
         .headers(HEADERS)
-        .body(JSON)
+        .body(body)
         .toFragment();
   }
 
@@ -81,6 +80,10 @@ public class ServicePactTest {
   public void should_process_the_json_payload_from_provider() {
     TestObserver<ServiceResponse> observer = service.fetchResponse(DATE_TIME).test();
     observer.assertNoErrors();
-    observer.assertValue(ServiceResponse.create(DATE_TIME, Collections.singletonList(Animal.create("Doggy", "dog"))));
+    observer.assertValue(ServiceResponse.create(DATE_TIME, Arrays.asList(
+        Animal.create("Doggy", "dog"),
+        Animal.create("Doggy", "dog"),
+        Animal.create("Doggy", "dog")
+    )));
   }
 }

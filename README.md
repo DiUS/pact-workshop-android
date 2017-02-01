@@ -500,3 +500,78 @@ For assistance debugging failures, run `bundle exec rake pact:verify:help`
 ```
 
 The test has failed for 2 reasons. Firstly, the animals field has a different value to what was expected by the consumer. Secondly, and more importantly, the consumer was expecting a date field.
+
+## Step 6 - Back to the client we go
+
+Let's correct the consumer tests to handle any list of animals and use the correct field for the date.
+
+Then we need to add a type matcher for `animals` and change the field for the date to be `valid_date`. We can also
+add a regular expression to make sure the `valid_date` field is a valid date. This is important because we are
+parsing it.
+
+The updated consumer test is now:
+
+```java
+public class ServicePactTest {
+
+  static final DateTime DATE_TIME;
+  static final Map<String, String> HEADERS;
+
+  static {
+    DATE_TIME = DateTime.now();
+
+    HEADERS = new HashMap<>();
+    HEADERS.put("Content-Type", "application/json");
+  }
+
+  Service service;
+
+  @Before
+  public void setUp() {
+    NetworkModule networkModule = new NetworkModule();
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class));
+  }
+
+  @Rule
+  public PactProviderRule mockProvider = new PactProviderRule("our_provider", "localhost", 9292, this);
+
+  @Pact(provider = "our_provider", consumer = "our_consumer")
+  public PactFragment createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
+    PactDslJsonBody body = new PactDslJsonBody()
+        .stringType("test")
+        .stringType("valid_date", DateHelper.toString(DATE_TIME))
+        .eachLike("animals", 3)
+        .stringType("name", "Doggy")
+        .stringType("image", "dog")
+        .closeObject()
+        .closeArray()
+        .asBody();
+
+    return builder
+        .given("data count is > 0")
+        .uponReceiving("a request for json data")
+        .path("/provider.json")
+        .method("GET")
+        .query("valid_date=" + DateHelper.encodeDate(DATE_TIME))
+        .willRespondWith()
+        .status(200)
+        .headers(HEADERS)
+        .body(body)
+        .toFragment();
+  }
+
+  @Test
+  @PactVerification("our_provider")
+  public void should_process_the_json_payload_from_provider() {
+    TestObserver<ServiceResponse> observer = service.fetchResponse(DATE_TIME).test();
+    observer.assertNoErrors();
+  }
+}
+```
+
+Re-run the tests will now generate an updated pact file.
+
+```console
+TODO
+```
+
