@@ -100,3 +100,64 @@ class Provider < Sinatra::Base
 end
 ```
 
+## Step 2 - Client Tested but integration fails
+
+Now lets test the client on the app:
+
+ServiceTest.java:
+
+```java
+public class ServiceTest {
+
+  Service.Api api;
+  Service service;
+
+  @Before
+  public void setup() {
+    api = mock(Service.Api.class);
+    service = new Service(api);
+  }
+
+  @Test
+  public void should_process_json_payload_from_provider() {
+    // given
+    ServiceResponse response = ServiceResponse.create(DateTime.now(), Collections.singletonList(Animal.create("Doggy", "dog")));
+    when(api.loadProviderJson(any())).thenReturn(Single.just(response));
+
+    // when
+    TestObserver<ServiceResponse> observer = service.fetchResponse(DateTime.now()).test();
+
+    // then
+    observer.assertNoErrors();
+    observer.assertValue(response);
+  }
+
+}
+```
+
+Let's run this test and see it all pass:
+
+```console
+    $ ./gradlew clean testDebugUnitTest
+
+...
+:app:testDebugUnitTest
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_empty_when_fetch_returns_nothing PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_error_when_fetch_fails PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loaded_when_fetch_succeeds PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loading_when_fetching PASSED
+
+au.com.dius.pactconsumer.data.ServiceTest > should_process_json_payload_from_provider PASSED
+
+au.com.dius.pactconsumer.data.FakeServiceTest > should_return_list_of_animals PASSED
+
+BUILD SUCCESSFUL
+
+Total time: 16.089 secs
+```
+
+However, there is a problem with this integration point. The provider returns a different field names, which will blow up when run for real even with the tests all passing. Here is where Pact comes in.
