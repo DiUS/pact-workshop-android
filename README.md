@@ -138,7 +138,7 @@ public class ServiceTest {
 Let's run this test and see it all pass:
 
 ```console
-    $ ./gradlew clean testDebugUnitTest
+$ ./gradlew clean testDebugUnitTest
 
 ...
 :app:testDebugUnitTest
@@ -303,7 +303,6 @@ Generated pact file (consumer/app/target/pacts/our_consumer-our_provider.json):
     }
 }
 ```
-
 ## Step 4 - Verify pact against provider
 
 Pact has a rake task to verify the producer against the generated pact file. It can get the pact file from any URL (like the last successful CI build), but we just going to use the local one. Here is the addition to the Rakefile.
@@ -331,6 +330,8 @@ end
 Now if we copy the pact file from the consumer project and run our pact verification task, it should fail.
 
 ```console
+$ rake pact:verify
+
 SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
 Reading pact at spec/pacts/our_consumer-our_provider.json
 
