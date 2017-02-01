@@ -450,7 +450,9 @@ end
 
 and then re-run the provider verification.
 
-```console rake pact:verify
+```console
+$ rake pact:verify
+
 SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
 Reading pact at spec/pacts/our_consumer-our_provider.json
 
@@ -496,7 +498,6 @@ Failed interactions:
 bundle exec rake pact:verify:at[spec/pacts/our_consumer-our_provider.json] PACT_DESCRIPTION="a request for json data" PACT_PROVIDER_STATE="data count is > 0" # A request for json data given data count is > 0
 
 For assistance debugging failures, run `bundle exec rake pact:verify:help`
-
 
 ```
 
