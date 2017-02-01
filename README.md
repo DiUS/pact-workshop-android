@@ -571,7 +571,49 @@ public class ServicePactTest {
 
 Re-run the tests will now generate an updated pact file.
 
+```console ./gradlew clean testDebugUnitTest
+...
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_empty_when_fetch_returns_nothing PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_error_when_fetch_fails PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loaded_when_fetch_succeeds PASSED
+
+au.com.dius.pactconsumer.domain.PresenterTest > should_show_loading_when_fetching PASSED
+
+au.com.dius.pactconsumer.data.ServiceTest > should_process_json_payload_from_provider PASSED
+
+au.com.dius.pactconsumer.data.FakeServiceTest > should_return_list_of_animals PASSED
+
+au.com.dius.pactconsumer.data.ServicePactTest > should_process_the_json_payload_from_provider PASSED
+
+BUILD SUCCESSFUL
+
+Total time: 17.235 secs
+```
+
+## Step 7 - Verify the provider again
+
+Copy over the new pact file.
+
+Running the verification against the provider now passes. Yay!
+
 ```console
-TODO
+rake pact:verify
+SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
+Reading pact at spec/pacts/our_consumer-our_provider.json
+WARN: Ignoring unsupported matching rules {"min"=>0} for path $['body']['animals']
+
+Verifying a pact between our_consumer and our_provider
+  Given data count is > 0
+    a request for json data
+      with GET /provider.json?valid_date=2017-02-01T20%253A30%253A58.233%252B11%253A00
+        returns a response which
+          has status code 200
+          has a matching body
+          includes headers
+            "Content-Type" with value "application/json"
+
+1 interaction, 0 failures
 ```
 
