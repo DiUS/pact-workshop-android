@@ -138,7 +138,7 @@ public class ServiceTest {
 Let's run this test and see it all pass:
 
 ```console
-    $ ./gradlew clean testDebugUnitTest
+$ ./gradlew clean testDebugUnitTest
 
 ...
 :app:testDebugUnitTest
