@@ -40,7 +40,7 @@ public class ServiceResponse {
 
     ServiceResponse that = (ServiceResponse) o;
 
-    if (validDate != null ? !validDate.equals(that.validDate) : that.validDate != null)
+    if (validDate != null ? !(validDate.getMillis() == validDate.getMillis()) : that.validDate != null)
       return false;
     return animals != null ? animals.equals(that.animals) : that.animals == null;
 
