@@ -573,8 +573,10 @@ public class ServicePactTest {
 
 Re-run the tests will now generate an updated pact file.
 
-```console ./gradlew clean testDebugUnitTest
+```console
+./gradlew clean testDebugUnitTest
 ...
+
 au.com.dius.pactconsumer.domain.PresenterTest > should_show_empty_when_fetch_returns_nothing PASSED
 
 au.com.dius.pactconsumer.domain.PresenterTest > should_show_error_when_fetch_fails PASSED
