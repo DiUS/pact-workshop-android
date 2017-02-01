@@ -33,7 +33,7 @@ public class ServicePactTest {
   static final Map<String, String> HEADERS;
 
   static {
-    DATE_TIME = DateHelper.parse("2017-02-01T20:23:25.275+11:00");
+    DATE_TIME = DateTime.now();
 
     HEADERS = new HashMap<>();
     HEADERS.put("Content-Type", "application/json");
