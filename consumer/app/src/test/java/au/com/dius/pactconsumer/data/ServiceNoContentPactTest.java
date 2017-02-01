@@ -28,8 +28,7 @@ public class ServiceNoContentPactTest {
   static final DateTime DATE_TIME;
 
   static {
-    String dateTimeJson = "2017-02-01T12:23:20+11:00";
-    DATE_TIME = DateTime.parse(dateTimeJson);
+    DATE_TIME = DateTime.now();
   }
 
   Service service;

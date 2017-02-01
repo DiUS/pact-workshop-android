@@ -31,8 +31,7 @@ public class ServicePactTest {
   static final Map<String, String> HEADERS;
 
   static {
-    String dateTimeJson = "2017-02-01T12:23:20+11:00";
-    DATE_TIME = DateTime.parse(dateTimeJson);
+    DATE_TIME = DateTime.now();
 
     HEADERS = new HashMap<>();
     HEADERS.put("Content-Type", "application/json");
