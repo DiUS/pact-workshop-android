@@ -34,6 +34,12 @@ android {
     warning 'InvalidPackage' // Note: issue with okio: https://github.com/square/okio/issues/58
   }
 
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    }
+  }
+
 }
 
 dependencies {
