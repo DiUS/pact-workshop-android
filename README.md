@@ -1,4 +1,4 @@
-Example Ruby Project for Pact Workshop
+Example Android Project for Pact Workshop
 ======================================
 
 When writing a lot of small services, testing the interactions between these becomes a major headache. That's the problem Pact is trying to solve.
@@ -7,9 +7,18 @@ Integration tests typically are slow and brittle, requiring each component to ha
 
 After J. B. Rainsberger's talk "Integrated Tests Are A Scam" people have been thinking how to get the confidence we need to deploy our software to production without having a tiresome integration test suite that does not give us all the coverage we think it does.
 
-Pact is a ruby gem that allows you to define a pact between service consumers and providers. It provides a DSL for service consumers to define the request they will make to a service producer and the response they expect back. This expectation is used in the consumers specs to provide a mock producer, and is also played back in the producer specs to ensure the producer actually does provide the response the consumer expects.
+Pact is a testing framework that allows you to define a pact between service consumers and providers. It provides a DSL for service consumers to define the request they will make to a service producer and the response they expect back. This expectation is used in the consumers specs to provide a mock producer, and is also played back in the producer specs to ensure the producer actually does provide the response the consumer expects.
 
 This allows you to test both sides of an integration point using fast unit tests.
+
+## Prerequisites
+
+You will need to have the following items installed for you to run through the workshop.
+
+- Java 1.8
+- AndroidStudio (2.2.3)
+- Android SDK 25, Emulator Image and Latest build Tools
+- Ruby 2.3.0
 
 ## Step 1 - Simple customer calling Provider
 

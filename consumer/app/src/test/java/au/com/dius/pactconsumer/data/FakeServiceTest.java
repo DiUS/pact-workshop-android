@@ -1,11 +1,10 @@
 package au.com.dius.pactconsumer.data;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-import au.com.dius.pactconsumer.data.model.Animal;
+import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import io.reactivex.observers.TestObserver;
 
 public class FakeServiceTest {
@@ -20,11 +19,11 @@ public class FakeServiceTest {
   @Test
   public void should_return_list_of_animals() {
     // when
-    TestObserver<List<Animal>> observer = service.getAnimals().test();
+    TestObserver<ServiceResponse> observer = service.fetchResponse(DateTime.now()).test();
 
     // then
     observer.assertNoErrors();
-    observer.assertValueAt(0, animals -> animals.size() == 3);
+    observer.assertValue(FakeService.RESPONSE);
   }
 
 }

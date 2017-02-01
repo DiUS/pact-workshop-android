@@ -1,21 +1,23 @@
 package au.com.dius.pactconsumer.domain;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import au.com.dius.pactconsumer.R;
+import au.com.dius.pactconsumer.data.FakeService;
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.data.exceptions.ServiceException;
-import au.com.dius.pactconsumer.data.model.Animal;
+import au.com.dius.pactconsumer.data.model.ServiceResponse;
+import au.com.dius.pactconsumer.util.Logger;
 import au.com.dius.pactconsumer.util.TestRxBinder;
 import io.reactivex.Single;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,34 +28,30 @@ public class PresenterTest {
   Contract.View view;
   Presenter presenter;
 
-  List<Animal> animals;
-
   @Before
   public void setUp() {
     repository = mock(Repository.class);
     view = mock(Contract.View.class);
-    presenter = new Presenter(repository, view, new TestRxBinder());
-
-    animals = Arrays.asList(Animal.create("Doggy", "dog"));
+    presenter = new Presenter(repository, view, new TestRxBinder(), mock(Logger.class));
   }
 
   @Test
   public void should_show_loaded_when_fetch_succeeds() {
     // given
-    when(repository.getAnimals()).thenReturn(Single.just(animals));
+    when(repository.fetchResponse(any())).thenReturn(Single.just(FakeService.RESPONSE));
 
     // when
     presenter.onStart();
 
     // then
-    verify(view).setViewState(ViewState.Loaded.create(animals));
+    verify(view).setViewState(ViewState.Loaded.create(FakeService.RESPONSE.getAnimals()));
   }
 
   @Test
   public void should_show_error_when_fetch_fails() {
     // given
     ServiceException exception = new ServiceException();
-    when(repository.getAnimals()).thenReturn(Single.error(exception));
+    when(repository.fetchResponse(any())).thenReturn(Single.error(exception));
 
     // when
     presenter.onStart();
@@ -65,7 +63,7 @@ public class PresenterTest {
   @Test
   public void should_show_empty_when_fetch_returns_nothing() {
     // given
-    when(repository.getAnimals()).thenReturn(Single.just(Collections.emptyList()));
+    when(repository.fetchResponse(any())).thenReturn(Single.just(new ServiceResponse("", DateTime.now(), Collections.emptyList())));
 
     // when
     presenter.onStart();
@@ -77,7 +75,7 @@ public class PresenterTest {
   @Test
   public void should_show_loading_when_fetching() {
     // given
-    when(repository.getAnimals()).thenReturn(Single.just(animals));
+    when(repository.fetchResponse(any())).thenReturn(Single.just(FakeService.RESPONSE));
 
     // when
     presenter.onStart();
@@ -85,7 +83,7 @@ public class PresenterTest {
     // then
     InOrder inOrder = Mockito.inOrder(view);
     inOrder.verify(view).setViewState(ViewState.Loading.create());
-    inOrder.verify(view).setViewState(ViewState.Loaded.create(animals));
+    inOrder.verify(view).setViewState(ViewState.Loaded.create(FakeService.RESPONSE.getAnimals()));
   }
 
 }

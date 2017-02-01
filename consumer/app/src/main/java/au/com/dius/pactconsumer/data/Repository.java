@@ -2,14 +2,14 @@ package au.com.dius.pactconsumer.data;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import org.joda.time.DateTime;
 
-import au.com.dius.pactconsumer.data.model.Animal;
+import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import io.reactivex.Single;
 
 public interface Repository {
 
   @NonNull
-  Single<List<Animal>> getAnimals();
+  Single<ServiceResponse> fetchResponse(@NonNull DateTime dateTime);
 
 }

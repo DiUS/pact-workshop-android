@@ -3,12 +3,16 @@ package au.com.dius.pactconsumer.domain;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import au.com.dius.pactconsumer.R;
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.data.model.Animal;
+import au.com.dius.pactconsumer.data.model.ServiceResponse;
+import au.com.dius.pactconsumer.util.Logger;
 import au.com.dius.pactconsumer.util.RxBinder;
 import io.reactivex.Observable;
 
@@ -20,12 +24,16 @@ public class Presenter implements Contract.Presenter {
 
   private final RxBinder binder;
 
+  private final Logger logger;
+
   public Presenter(@NonNull Repository repository,
                    @NonNull Contract.View view,
-                   @NonNull RxBinder binder) {
+                   @NonNull RxBinder binder,
+                   @NonNull Logger logger) {
     this.repository = repository;
     this.viewRef = new WeakReference<>(view);
     this.binder = binder;
+    this.logger = logger;
   }
 
   @Override
@@ -40,8 +48,9 @@ public class Presenter implements Contract.Presenter {
   }
 
   private Observable<List<Animal>> getAnimals() {
-    return repository.getAnimals()
-        .toObservable();
+    return repository.fetchResponse(DateTime.now())
+        .toObservable()
+        .map(ServiceResponse::getAnimals);
   }
 
   private void setLoading() {
@@ -67,6 +76,8 @@ public class Presenter implements Contract.Presenter {
     Contract.View view = getView();
     if (view == null) return;
 
+    // TODO only catch service exceptions
+    logger.e(Presenter.class.getSimpleName(), "Error loading service response", error);
     view.setViewState(ViewState.Error.create(R.string.error_message));
   }
 

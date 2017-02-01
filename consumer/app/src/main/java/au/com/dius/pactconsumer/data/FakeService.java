@@ -2,26 +2,32 @@ package au.com.dius.pactconsumer.data;
 
 import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+
 import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import au.com.dius.pactconsumer.data.model.Animal;
+import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import io.reactivex.Single;
 
 @Singleton
 public class FakeService implements Repository {
 
-  private static final List<Animal> ANIMALS_LIST;
+  public static final ServiceResponse RESPONSE;
 
   static {
-      ANIMALS_LIST = Arrays.asList(
-          Animal.create("Doggy", "dog"),
-          Animal.create("Cathy", "cat"),
-          Animal.create("Birdy", "bird")
-      );
+    RESPONSE = new ServiceResponse(
+        "NO",
+        DateTime.now(),
+        Arrays.asList(
+            Animal.create("Doggy", "dog"),
+            Animal.create("Cathy", "cat"),
+            Animal.create("Birdy", "bird")
+        )
+    );
   }
 
   @Inject
@@ -30,8 +36,8 @@ public class FakeService implements Repository {
 
   @NonNull
   @Override
-  public Single<List<Animal>> getAnimals() {
-    return Single.just(ANIMALS_LIST);
+  public Single<ServiceResponse> fetchResponse(@NonNull DateTime dateTime) {
+    return Single.just(RESPONSE);
   }
 
 }

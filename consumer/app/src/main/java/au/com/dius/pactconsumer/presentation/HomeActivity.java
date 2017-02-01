@@ -9,19 +9,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import au.com.dius.pactconsumer.R;
 import au.com.dius.pactconsumer.app.PactActivity;
 import au.com.dius.pactconsumer.app.di.ApplicationComponent;
-import au.com.dius.pactconsumer.data.FakeService;
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.domain.Contract;
 import au.com.dius.pactconsumer.domain.Presenter;
 import au.com.dius.pactconsumer.domain.ViewState;
+import au.com.dius.pactconsumer.util.Logger;
 import au.com.dius.pactconsumer.util.RxBinder;
 
 public class HomeActivity extends PactActivity implements Contract.View {
 
-  private Repository repository;
+  @Inject
+  Repository repository;
+
+  @Inject
+  Logger logger;
+
   private Presenter presenter;
 
   private View loadingView;
@@ -49,12 +56,12 @@ public class HomeActivity extends PactActivity implements Contract.View {
   }
 
   private void initialisePresenter(@Nullable Bundle savedInstanceState) {
-    presenter = new Presenter(repository, this, new RxBinder());
+    presenter = new Presenter(repository, this, new RxBinder(), logger);
   }
 
   @Override
   public void inject(@NonNull ApplicationComponent component) {
-    repository = component.getRepository();
+    component.inject(this);
   }
 
   @Override
@@ -95,11 +102,13 @@ public class HomeActivity extends PactActivity implements Contract.View {
 
   private void setEmpty(@NonNull ViewState.Empty viewState) {
     hideViews();
+    emptyView.setText(getResources().getString(viewState.getMessage()));
     emptyView.setVisibility(View.VISIBLE);
   }
 
   private void setError(@NonNull ViewState.Error viewState) {
     hideViews();
+    errorView.setText(getResources().getString(viewState.getMessage()));
     errorView.setVisibility(View.VISIBLE);
   }
 
