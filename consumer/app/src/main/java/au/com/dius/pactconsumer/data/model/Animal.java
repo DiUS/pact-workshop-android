@@ -10,12 +10,12 @@ public class Animal {
   @Json(name = "name")
   private final String name;
 
-  @Json(name = "type")
-  private final String type;
+  @Json(name = "image")
+  private final String image;
 
-  public Animal(@NonNull String name, @NonNull String type) {
+  public Animal(@NonNull String name, @NonNull String image) {
     this.name = name;
-    this.type = type;
+    this.image = image;
   }
 
   @NonNull
@@ -25,7 +25,7 @@ public class Animal {
 
   @NonNull
   public String getType() {
-    return type;
+    return image;
   }
 
   @Override
@@ -36,14 +36,14 @@ public class Animal {
     Animal animal = (Animal) o;
 
     if (name != null ? !name.equals(animal.name) : animal.name != null) return false;
-    return type != null ? type.equals(animal.type) : animal.type == null;
+    return image != null ? image.equals(animal.image) : animal.image == null;
 
   }
 
   @Override
   public int hashCode() {
     int result = name != null ? name.hashCode() : 0;
-    result = 31 * result + (type != null ? type.hashCode() : 0);
+    result = 31 * result + (image != null ? image.hashCode() : 0);
     return result;
   }
 
@@ -51,11 +51,11 @@ public class Animal {
   public String toString() {
     return "Animal{" +
         "name='" + name + '\'' +
-        ", type='" + type + '\'' +
+        ", image='" + image + '\'' +
         '}';
   }
 
-  public static Animal create(@NonNull String doggy, @NonNull String dog) {
-    return new Animal(doggy, dog);
+  public static Animal create(@NonNull String name, @NonNull String image) {
+    return new Animal(name, image);
   }
 }

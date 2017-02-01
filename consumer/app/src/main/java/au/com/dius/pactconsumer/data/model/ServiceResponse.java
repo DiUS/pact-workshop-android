@@ -60,4 +60,8 @@ public class ServiceResponse {
         ", animals=" + animals +
         '}';
   }
+
+  public static ServiceResponse create(@NonNull DateTime validDate, @NonNull List<Animal> animals) {
+    return new ServiceResponse(validDate, animals);
+  }
 }

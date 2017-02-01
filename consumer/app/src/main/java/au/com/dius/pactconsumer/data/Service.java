@@ -15,7 +15,6 @@ import javax.inject.Singleton;
 import au.com.dius.pactconsumer.data.exceptions.BadRequestException;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
-import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -28,16 +27,14 @@ public class Service implements Repository {
 
   public interface Api {
     @GET("provider.json")
-    Single<String> loadProviderJson(@Query("valid_date") String validDate);
+    Single<ServiceResponse> loadProviderJson(@Query("valid_date") String validDate);
   }
 
   private final Api api;
-  private final Serializer serializer;
 
   @Inject
-  public Service(@NonNull Api api, @NonNull Serializer serializer) {
+  public Service(@NonNull Api api) {
     this.api = api;
-    this.serializer = serializer;
   }
 
   @NonNull
@@ -45,7 +42,6 @@ public class Service implements Repository {
   public Single<ServiceResponse> fetchResponse(@NonNull DateTime dateTime) {
     try {
       return api.loadProviderJson(DateHelper.encodeDate(dateTime))
-          .map(json -> serializer.fromJson(ServiceResponse.class, json))
           .onErrorResumeNext(this::mapError);
     } catch (UnsupportedEncodingException e) {
       return Single.error(e);

@@ -14,7 +14,7 @@ android {
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-    buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:9292\""
+    buildConfigField "String", "BASE_URL", "\"http://10.0.2.2:4567\""
   }
 
   buildTypes {
@@ -34,9 +34,6 @@ android {
     warning 'InvalidPackage' // Note: issue with okio: https://github.com/square/okio/issues/58
   }
 
-  packagingOptions {
-    pickFirst  'META-INF/license.txt'
-  }
 }
 
 dependencies {

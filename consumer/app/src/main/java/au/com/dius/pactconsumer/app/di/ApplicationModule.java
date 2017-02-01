@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.data.Service;
-import au.com.dius.pactconsumer.util.Serializer;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
@@ -31,8 +30,8 @@ public class ApplicationModule {
   @Singleton
   @Provides
   @NonNull
-  public Repository getRepository(@NonNull Retrofit retrofit, @NonNull Serializer serializer) {
-    return new Service(retrofit.create(Service.Api.class), serializer);
+  public Repository getRepository(@NonNull Retrofit retrofit) {
+    return new Service(retrofit.create(Service.Api.class));
   }
 
 }

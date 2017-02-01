@@ -18,7 +18,7 @@ public class RxBinder {
 
   public <T> void bind(Observable<T> observable,
                        Consumer<T> onNext,
-                       Consumer<RuntimeException> onError,
+                       Consumer<Exception> onError,
                        Action onComplete) {
     compositeDisposable.add(
         observable.subscribeOn(Schedulers.io())
@@ -36,15 +36,15 @@ public class RxBinder {
 
               @Override
               public void onError(Throwable thr) {
+                if (!(thr instanceof Exception)) {
+                  Exceptions.throwIfFatal(thr);
+                  return;
+                }
+
                 try {
-                  if (thr instanceof RuntimeException) {
-                    onError.accept((RuntimeException) thr);
-                  } else {
-                    throw thr;
-                  }
-                } catch (Throwable e) {
-                  Log.e(RxBinder.class.getSimpleName(), "Error in stream", thr);
-                  Exceptions.propagate(thr);
+                  onError.accept((Exception) thr);
+                } catch (Exception e) {
+                  Log.e(RxBinder.class.getSimpleName(), "Error calling onError", thr);
                 }
               }
 

@@ -72,7 +72,7 @@ public class Presenter implements Contract.Presenter {
     view.setViewState(ViewState.Loaded.create(animals));
   }
 
-  private void setError(@NonNull RuntimeException exception) {
+  private void setError(@NonNull Exception exception) {
     Contract.View view = getView();
     if (view == null) return;
 

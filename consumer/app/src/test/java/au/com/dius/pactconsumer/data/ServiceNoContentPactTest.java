@@ -19,7 +19,6 @@ import au.com.dius.pact.model.PactFragment;
 import au.com.dius.pactconsumer.app.di.NetworkModule;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
-import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.observers.TestObserver;
 
 import static org.mockito.Mockito.mock;
@@ -38,7 +37,7 @@ public class ServiceNoContentPactTest {
   @Before
   public void setUp() {
     NetworkModule networkModule = new NetworkModule();
-    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class), new Serializer());
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class));
   }
 
   @Rule

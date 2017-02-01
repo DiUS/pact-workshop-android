@@ -8,8 +8,6 @@ import java.util.Collections;
 
 import au.com.dius.pactconsumer.data.model.Animal;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
-import au.com.dius.pactconsumer.util.DateHelper;
-import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 
@@ -25,35 +23,21 @@ public class ServiceTest {
   @Before
   public void setup() {
     api = mock(Service.Api.class);
-    service = new Service(api, new Serializer());
+    service = new Service(api);
   }
 
   @Test
   public void should_process_json_payload_from_provider() {
     // given
-    String dateTimeJson = "2017-02-01T12:23:20+11:00";
-    DateTime dateTime = DateHelper.parse(dateTimeJson);
-    when(api.loadProviderJson(any())).thenReturn(
-        Single.just(
-            "{\n" +
-            "      \"test\": \"NO\",\n" +
-            "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
-            "      \"animals\": [\n" +
-            "        {\n" +
-            "          \"name\": \"Doggy\",\n" +
-            "          \"type\": \"dog\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "}"
-        )
-    );
+    ServiceResponse response = ServiceResponse.create(DateTime.now(), Collections.singletonList(Animal.create("Doggy", "dog")));
+    when(api.loadProviderJson(any())).thenReturn(Single.just(response));
 
     // when
     TestObserver<ServiceResponse> observer = service.fetchResponse(DateTime.now()).test();
 
     // then
     observer.assertNoErrors();
-    observer.assertValue(new ServiceResponse(dateTime, Collections.singletonList(Animal.create("Doggy", "dog"))));
+    observer.assertValue(response);
   }
 
 }

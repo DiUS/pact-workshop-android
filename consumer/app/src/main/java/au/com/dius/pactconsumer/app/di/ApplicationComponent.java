@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.presentation.HomeActivity;
 import au.com.dius.pactconsumer.util.Logger;
-import au.com.dius.pactconsumer.util.Serializer;
 import dagger.Component;
 
 @Singleton
@@ -20,9 +19,6 @@ public interface ApplicationComponent {
 
   @NonNull
   Logger getLogger();
-
-  @NonNull
-  Serializer getSerializer();
 
   @NonNull
   Repository getRepository();

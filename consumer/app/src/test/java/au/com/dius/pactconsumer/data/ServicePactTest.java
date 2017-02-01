@@ -21,7 +21,6 @@ import au.com.dius.pact.model.PactFragment;
 import au.com.dius.pactconsumer.app.di.NetworkModule;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
-import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.observers.TestObserver;
 
 import static org.mockito.Mockito.mock;
@@ -30,7 +29,6 @@ public class ServicePactTest {
 
   static final DateTime DATE_TIME;
   static final Map<String, String> HEADERS;
-  static final String JSON;
 
   static {
     String dateTimeJson = "2017-02-01T12:23:20+11:00";
@@ -38,18 +36,6 @@ public class ServicePactTest {
 
     HEADERS = new HashMap<>();
     HEADERS.put("Content-Type", "application/json");
-
-    JSON =
-        "{\n" +
-        "      \"test\": \"NO\",\n" +
-        "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
-        "      \"animals\": [\n" +
-        "        {\n" +
-        "          \"name\": \"Doggy\",\n" +
-        "          \"type\": \"dog\"\n" +
-        "        }\n" +
-        "      ]\n" +
-        "}";
   }
 
   Service service;
@@ -57,7 +43,7 @@ public class ServicePactTest {
   @Before
   public void setUp() {
     NetworkModule networkModule = new NetworkModule();
-    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class), new Serializer());
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class));
   }
 
   @Rule
