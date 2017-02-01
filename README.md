@@ -138,7 +138,7 @@ public class ServiceTest {
 Let's run this test and see it all pass:
 
 ```console
-    $ ./gradlew clean testDebugUnitTest
+$ ./gradlew clean testDebugUnitTest
 
 ...
 :app:testDebugUnitTest
@@ -303,7 +303,6 @@ Generated pact file (consumer/app/target/pacts/our_consumer-our_provider.json):
     }
 }
 ```
-
 ## Step 4 - Verify pact against provider
 
 Pact has a rake task to verify the producer against the generated pact file. It can get the pact file from any URL (like the last successful CI build), but we just going to use the local one. Here is the addition to the Rakefile.
@@ -331,6 +330,8 @@ end
 Now if we copy the pact file from the consumer project and run our pact verification task, it should fail.
 
 ```console
+$ rake pact:verify
+
 SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
 Reading pact at spec/pacts/our_consumer-our_provider.json
 
@@ -449,7 +450,9 @@ end
 
 and then re-run the provider verification.
 
-```console rake pact:verify
+```console
+$ rake pact:verify
+
 SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
 Reading pact at spec/pacts/our_consumer-our_provider.json
 
@@ -495,7 +498,6 @@ Failed interactions:
 bundle exec rake pact:verify:at[spec/pacts/our_consumer-our_provider.json] PACT_DESCRIPTION="a request for json data" PACT_PROVIDER_STATE="data count is > 0" # A request for json data given data count is > 0
 
 For assistance debugging failures, run `bundle exec rake pact:verify:help`
-
 
 ```
 
@@ -571,8 +573,10 @@ public class ServicePactTest {
 
 Re-run the tests will now generate an updated pact file.
 
-```console ./gradlew clean testDebugUnitTest
+```console
+./gradlew clean testDebugUnitTest
 ...
+
 au.com.dius.pactconsumer.domain.PresenterTest > should_show_empty_when_fetch_returns_nothing PASSED
 
 au.com.dius.pactconsumer.domain.PresenterTest > should_show_error_when_fetch_fails PASSED
@@ -599,7 +603,7 @@ Copy over the new pact file.
 Running the verification against the provider now passes. Yay!
 
 ```console
-rake pact:verify
+$ rake pact:verify
 SPEC_OPTS='' /home/theeban/.rvm/rubies/ruby-2.3.0/bin/ruby -S pact verify --pact-helper /home/theeban/Projects/pact-workshop-android/provider/spec/pact_helper.rb
 Reading pact at spec/pacts/our_consumer-our_provider.json
 WARN: Ignoring unsupported matching rules {"min"=>0} for path $['body']['animals']
