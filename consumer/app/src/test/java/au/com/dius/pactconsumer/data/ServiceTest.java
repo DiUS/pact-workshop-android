@@ -36,15 +36,15 @@ public class ServiceTest {
     when(api.loadProviderJson(any())).thenReturn(
         Single.just(
             "{\n" +
-                "      \"test\": \"NO\",\n" +
-                "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
-                "      \"animals\": [\n" +
-                "        {\n" +
-                "          \"name\": \"Doggy\",\n" +
-                "          \"type\": \"dog\"\n" +
-                "        }\n" +
-                "      ]\n" +
-                "}"
+            "      \"test\": \"NO\",\n" +
+            "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
+            "      \"animals\": [\n" +
+            "        {\n" +
+            "          \"name\": \"Doggy\",\n" +
+            "          \"type\": \"dog\"\n" +
+            "        }\n" +
+            "      ]\n" +
+            "}"
         )
     );
 

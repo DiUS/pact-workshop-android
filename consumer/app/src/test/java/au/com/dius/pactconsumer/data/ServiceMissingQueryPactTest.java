@@ -1,14 +1,13 @@
 package au.com.dius.pactconsumer.data;
 
 
-import org.joda.time.DateTime;
+import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.PactProviderRule;
@@ -21,6 +20,8 @@ import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.observers.TestObserver;
 
+import static org.mockito.Mockito.mock;
+
 public class ServiceMissingQueryPactTest {
 
   Service service;
@@ -28,7 +29,7 @@ public class ServiceMissingQueryPactTest {
   @Before
   public void setUp() {
     NetworkModule networkModule = new NetworkModule();
-    service = new Service(networkModule.getRetrofit("http://localhost:9292").create(Service.Api.class), new Serializer());
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class), new Serializer());
   }
 
   @Rule

@@ -1,6 +1,8 @@
 package au.com.dius.pactconsumer.data;
 
 
+import android.content.Context;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +24,8 @@ import au.com.dius.pactconsumer.util.DateHelper;
 import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.observers.TestObserver;
 
+import static org.mockito.Mockito.mock;
+
 public class ServicePactTest {
 
   static final DateTime DATE_TIME;
@@ -37,15 +41,15 @@ public class ServicePactTest {
 
     JSON =
         "{\n" +
-            "      \"test\": \"NO\",\n" +
-            "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
-            "      \"animals\": [\n" +
-            "        {\n" +
-            "          \"name\": \"Doggy\",\n" +
-            "          \"type\": \"dog\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "}";
+        "      \"test\": \"NO\",\n" +
+        "      \"valid_date\": \"" + dateTimeJson + "\",\n" +
+        "      \"animals\": [\n" +
+        "        {\n" +
+        "          \"name\": \"Doggy\",\n" +
+        "          \"type\": \"dog\"\n" +
+        "        }\n" +
+        "      ]\n" +
+        "}";
   }
 
   Service service;
@@ -53,7 +57,7 @@ public class ServicePactTest {
   @Before
   public void setUp() {
     NetworkModule networkModule = new NetworkModule();
-    service = new Service(networkModule.getRetrofit("http://localhost:9292").create(Service.Api.class), new Serializer());
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class), new Serializer());
   }
 
   @Rule

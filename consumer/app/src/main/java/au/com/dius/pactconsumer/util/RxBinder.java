@@ -6,6 +6,7 @@ import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
@@ -17,7 +18,7 @@ public class RxBinder {
 
   public <T> void bind(Observable<T> observable,
                        Consumer<T> onNext,
-                       Consumer<Throwable> onError,
+                       Consumer<RuntimeException> onError,
                        Action onComplete) {
     compositeDisposable.add(
         observable.subscribeOn(Schedulers.io())
@@ -36,9 +37,14 @@ public class RxBinder {
               @Override
               public void onError(Throwable thr) {
                 try {
-                  onError.accept(thr);
-                } catch (Exception e) {
-                  Log.e(RxBinder.class.getSimpleName(), "Error calling onError", e);
+                  if (thr instanceof RuntimeException) {
+                    onError.accept((RuntimeException) thr);
+                  } else {
+                    throw thr;
+                  }
+                } catch (Throwable e) {
+                  Log.e(RxBinder.class.getSimpleName(), "Error in stream", thr);
+                  Exceptions.propagate(thr);
                 }
               }
 

@@ -72,12 +72,11 @@ public class Presenter implements Contract.Presenter {
     view.setViewState(ViewState.Loaded.create(animals));
   }
 
-  private void setError(@NonNull Throwable error) {
+  private void setError(@NonNull RuntimeException exception) {
     Contract.View view = getView();
     if (view == null) return;
 
-    // TODO only catch service exceptions
-    logger.e(Presenter.class.getSimpleName(), "Error loading service response", error);
+    logger.e(Presenter.class.getSimpleName(), "Error loading service response", exception);
     view.setViewState(ViewState.Error.create(R.string.error_message));
   }
 

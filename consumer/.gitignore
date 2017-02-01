@@ -8,3 +8,4 @@
 /captures
 .externalNativeBuild
 app/target/pacts/*
+app/okhttp_cache/

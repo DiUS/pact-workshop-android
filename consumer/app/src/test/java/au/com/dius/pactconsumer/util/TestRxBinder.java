@@ -8,7 +8,10 @@ import io.reactivex.observers.DisposableObserver;
 public class TestRxBinder extends RxBinder {
 
   @Override
-  public <T> void bind(Observable<T> observable, Consumer<T> onNext, Consumer<Throwable> onError, Action onComplete) {
+  public <T> void bind(Observable<T> observable,
+                       Consumer<T> onNext,
+                       Consumer<RuntimeException> onError,
+                       Action onComplete) {
     observable
         .subscribeWith(new DisposableObserver<T>() {
 
@@ -24,8 +27,12 @@ public class TestRxBinder extends RxBinder {
           @Override
           public void onError(Throwable thr) {
             try {
-              onError.accept(thr);
-            } catch (Exception e) {
+              if (thr instanceof RuntimeException) {
+                onError.accept((RuntimeException) thr);
+              } else {
+                throw thr;
+              }
+            } catch (Throwable e) {
               e.printStackTrace();
             }
           }

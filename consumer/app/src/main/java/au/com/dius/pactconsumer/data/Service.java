@@ -13,13 +13,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import au.com.dius.pactconsumer.data.exceptions.BadRequestException;
-import au.com.dius.pactconsumer.data.exceptions.ServiceException;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
 import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
-import io.reactivex.functions.Function;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

@@ -1,6 +1,8 @@
 package au.com.dius.pactconsumer.data;
 
 
+import android.content.Context;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,6 +22,8 @@ import au.com.dius.pactconsumer.util.DateHelper;
 import au.com.dius.pactconsumer.util.Serializer;
 import io.reactivex.observers.TestObserver;
 
+import static org.mockito.Mockito.mock;
+
 public class ServiceNoContentPactTest {
 
   static final DateTime DATE_TIME;
@@ -34,7 +38,7 @@ public class ServiceNoContentPactTest {
   @Before
   public void setUp() {
     NetworkModule networkModule = new NetworkModule();
-    service = new Service(networkModule.getRetrofit("http://localhost:9292").create(Service.Api.class), new Serializer());
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class), new Serializer());
   }
 
   @Rule
