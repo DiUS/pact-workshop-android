@@ -40,10 +40,12 @@ public class ServiceResponse {
 
     ServiceResponse that = (ServiceResponse) o;
 
-    if (validDate != null ? !(validDate.getMillis() == that.validDate.getMillis()) : that.validDate != null)
+    long millis = validDate != null ? validDate.getMillis() : -1;
+    long thatMillis = that.validDate != null ? that.validDate.getMillis() : -1;
+    if (millis != thatMillis)
       return false;
-    return animals != null ? animals.equals(that.animals) : that.animals == null;
 
+    return animals != null ? animals.equals(that.animals) : that.animals == null;
   }
 
   @Override
