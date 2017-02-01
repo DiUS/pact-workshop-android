@@ -761,6 +761,7 @@ public class ServiceNoContentPactTest {
     observer.assertValue(new ServiceResponse(null, Collections.emptyList()));
   }
 }
+```
 
 ```json
 {
