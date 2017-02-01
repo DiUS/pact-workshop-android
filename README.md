@@ -617,3 +617,71 @@ Verifying a pact between our_consumer and our_provider
 1 interaction, 0 failures
 ```
 
+# Step 8 - Test for the missing query parameter
+
+In this step we are going to add a test for the case where the query parameter is missing. We do
+this by adding additional expectations.
+
+ServiceMissingQueryPactTest.java:
+
+```java
+public class ServiceMissingQueryPactTest {
+
+  Service service;
+
+  @Before
+  public void setUp() {
+    NetworkModule networkModule = new NetworkModule();
+    service = new Service(networkModule.getRetrofit(mock(Context.class), "http://localhost:9292").create(Service.Api.class));
+  }
+
+  @Rule
+  public PactProviderRule mockProvider = new PactProviderRule("our_provider", "localhost", 9292, this);
+
+  @Pact(provider = "our_provider", consumer = "our_consumer")
+  public PactFragment createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
+    return builder
+        .given("data count is > 0")
+        .uponReceiving("a request with an missing date parameter")
+        .path("/provider.json")
+        .method("GET")
+        .willRespondWith()
+        .status(400)
+        .body("valid_date is required")
+        .toFragment();
+  }
+
+  @Test
+  @PactVerification("our_provider")
+  public void should_process_the_json_payload_from_provider() {
+    TestObserver<ServiceResponse> observer = service.fetchResponse(null).test();
+    observer.assertError(BadRequestException.class);
+  }
+}
+```
+
+After running our tests, the pact file will have a new interaction.
+
+spec/pacts/our_consumer-our_provider.json:
+
+```json
+{
+	"description": "a request with an missing date parameter",
+	"request": {
+		"method": "GET",
+		"path": "/provider.json"
+	},
+	"response": {
+		"status": 400,
+		"body": "valid_date is required"
+	},
+	"providerState": "data count is > 0"
+}
+```
+
+Let us run this updated pact file with our provider.
+
+We get a lot of errors because our provider fails with a 500 status and an HTML error page.
+Time to update the provider to handle these cases.
+
+
