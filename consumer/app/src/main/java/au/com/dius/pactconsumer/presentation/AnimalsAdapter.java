@@ -1,5 +1,6 @@
 package au.com.dius.pactconsumer.presentation;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,7 +31,9 @@ public class AnimalsAdapter extends RecyclerView.Adapter<AnimalsAdapter.ViewHold
   public void onBindViewHolder(ViewHolder holder, int position) {
     Animal animal = animals.get(position);
     holder.titleView.setText(animal.getName());
-    // TODO image
+    Context context = holder.itemView.getContext();
+    int id = holder.itemView.getContext().getResources().getIdentifier(animal.getType(), "drawable", context.getPackageName());
+    holder.imageView.setImageDrawable(context.getResources().getDrawable(id, null));
   }
 
   @Override

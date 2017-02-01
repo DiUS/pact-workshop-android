@@ -11,10 +11,10 @@ import java.util.List;
 
 public class ServiceResponse {
 
-  @Json(name = "valid_date")
+  @Json(name = "date")
   private final DateTime validDate;
 
-  @Json(name = "animals")
+  @Json(name = "data")
   private final List<Animal> animals;
 
   public ServiceResponse(@Nullable DateTime validDate,
