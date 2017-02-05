@@ -1,6 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'au.com.dius.pact'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'au.com.dius:pact-jvm-provider-gradle_2.11:3.2.4'
+    }
+}
 
 android {
   compileSdkVersion 25
@@ -81,4 +91,12 @@ dependencies {
 
   testCompile "au.com.dius:pact-jvm-consumer-junit_2.11:3.3.6"
 
+}
+
+pact {
+    publish {
+        pactDirectory = 'app/target/pacts' // defaults to $buildDir/pacts
+        pactBrokerUrl = 'https://dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1@test.pact.dius.com.au/'
+        version = '1.0.0'
+    }
 }
