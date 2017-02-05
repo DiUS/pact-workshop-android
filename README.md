@@ -835,9 +835,9 @@ Running the provider verification passes. Awesome, we are all done.
 
 ## Step 11 - Sharing pacts with the Pact Broker
 
-OK, so now we have our Consumer generating pacts and our Provider verifying them
-- awesome! But what if other teams are providing APIs for you to consumer? It's a
-bit cumbersome sharing files around like this.
+OK, so now we have our Consumer generating pacts and our Provider verifying
+them - awesome! But what if other teams are providing APIs for you to consumer?
+It's a bit cumbersome sharing files around like this.
 
 How can we effectively collaborate on these contracts?
 
