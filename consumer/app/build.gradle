@@ -30,7 +30,7 @@ android {
   }
 
   lintOptions {
-    abortOnError true
+    abortOnError false
     warning 'InvalidPackage' // Note: issue with okio: https://github.com/square/okio/issues/58
   }
 
