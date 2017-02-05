@@ -351,7 +351,7 @@ Failures:
      Got 0 failures and 2 other errors:
 
      1.1) Failure/Error: set_up_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -359,7 +359,7 @@ Failures:
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/bin/pact:22:in `<main>'
 
      1.2) Failure/Error: tear_down_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -370,7 +370,7 @@ Failures:
      Got 0 failures and 2 other errors:
 
      2.1) Failure/Error: set_up_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -378,7 +378,7 @@ Failures:
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/bin/pact:22:in `<main>'
 
      2.2) Failure/Error: tear_down_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -389,7 +389,7 @@ Failures:
      Got 0 failures and 2 other errors:
 
      3.1) Failure/Error: set_up_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -397,7 +397,7 @@ Failures:
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/bin/pact:22:in `<main>'
 
      3.2) Failure/Error: tear_down_provider_state interaction.provider_state, options[:consumer]
-          
+
           RuntimeError:
             Could not find provider state "data count is > 0" for consumer our_consumer
           # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
@@ -470,9 +470,9 @@ Failures:
 
   1) Verifying a pact between our_consumer and our_provider Given data count is > 0 a request for json data with GET /provider.json?valid_date=2017-02-01T19%253A53%253A27.038%252B11%253A00 returns a response which has a matching body
      Failure/Error: expect(response_body).to match_term expected_response_body, diff_options
-     
+
        Actual: {"test":"NO","valid_date":"2017-02-01T20:14:51+11:00","animals":[{"name":"Buddy","image":"dog"},{"name":"Cathy","image":"cat"},{"name":"Birdy","image":"bird"}]}
-     
+
        @@ -1,10 +1,3 @@
         {
        -  "data": [
@@ -483,9 +483,9 @@ Failures:
        -  ],
        -  "date": "2017-02-01T19:53:27.038+11:00"
         }
-       
-       Key: - means "expected, but was not found". 
-            + means "actual, should not be found". 
+
+       Key: - means "expected, but was not found".
+            + means "actual, should not be found".
             Values where the expected matches the actual are not shown.
      # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/gems/pact-1.9.0/bin/pact:4:in `<top (required)>'
      # /home/theeban/.rvm/gems/ruby-2.3.0@example_pact/bin/pact:22:in `load'
@@ -783,7 +783,7 @@ public class ServiceNoContentPactTest {
 },
 ```
 
-To be able to verify out provider, we create a data class that the provider can use, and then set the data in
+To be able to verify our provider, we create a data class that the provider can use, and then set the data in
 the state change setup callback.
 
 lib/provider.rb:
@@ -833,3 +833,47 @@ end
 
 Running the provider verification passes. Awesome, we are all done.
 
+## Step 11 - Sharing pacts with the Pact Broker
+
+OK, so now we have our Consumer generating pacts and our Provider verifying them
+- awesome! But what if other teams are providing APIs for you to consumer? It's a
+bit cumbersome sharing files around like this.
+
+How can we effectively collaborate on these contracts?
+
+This is where the [Pact Broker](https://github.com/bethesque/pact_broker) comes in, The Pact Broker
+enables you to share your pacts between projects. It has a bunch of features, but for
+now we are most interested in the fact that it lets us query and manage them via an HTTP API.
+
+In our consumer gradle build, we've added a new task to do this.
+
+app/build.gradle:
+
+```groovy
+pact {
+    publish {
+        pactDirectory = 'app/target/pacts'
+        pactBrokerUrl = 'https://dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1@test.pact.dius.com.au/'
+        version = '1.0.0'
+    }
+}
+```
+
+Run `./gradlew pactPublish` to grab all pacts from `app/target/pacts` and publish them to our broker, assiging them
+the version `1.0.0`.
+
+Head over to https://test.pact.dius.com.au/ui/relationships to see a visualisation of this.
+
+Now that we've published the contracts, in your provider build, we update the `pact_helper.rb` to pull pacts from the broker instead of a local file:
+
+spec/pact_helper.rb:
+
+```ruby
+Pact.service_provider "our_provider" do
+
+  honours_pact_with 'our_consumer' do
+    pact_uri URI.encode('https://test.pact.dius.com.au/pact/provider/our_provider/consumer/our_consumer/latest')
+  end
+
+end
+```

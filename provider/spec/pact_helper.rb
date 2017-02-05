@@ -3,7 +3,7 @@ require 'pact/provider/rspec'
 Pact.service_provider "our_provider" do
 
   honours_pact_with 'our_consumer' do
-    pact_uri 'spec/pacts/our_consumer-our_provider.json'
+    pact_uri URI.encode('https://test.pact.dius.com.au/pact/provider/our_provider/consumer/our_consumer/latest')
   end
 
 end
