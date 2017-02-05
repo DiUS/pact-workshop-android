@@ -567,6 +567,11 @@ public class ServicePactTest {
   public void should_process_the_json_payload_from_provider() {
     TestObserver<ServiceResponse> observer = service.fetchResponse(DATE_TIME).test();
     observer.assertNoErrors();
+    observer.assertValue(ServiceResponse.create(DATE_TIME, Arrays.asList(
+        Animal.create("Doggy", "dog"),
+        Animal.create("Doggy", "dog"),
+        Animal.create("Doggy", "dog")
+    )));
   }
 }
 ```
