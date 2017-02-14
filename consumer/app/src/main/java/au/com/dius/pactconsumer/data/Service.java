@@ -13,9 +13,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import au.com.dius.pactconsumer.data.exceptions.BadRequestException;
+import au.com.dius.pactconsumer.data.model.Animal;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.functions.Function;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -42,7 +45,12 @@ public class Service implements Repository {
   public Single<ServiceResponse> fetchResponse(@NonNull DateTime dateTime) {
     try {
       return api.loadProviderJson(DateHelper.encodeDate(dateTime))
-          .onErrorResumeNext(this::mapError);
+          .onErrorResumeNext(new Function<Throwable, SingleSource<? extends ServiceResponse>>() {
+            @Override
+            public SingleSource<? extends ServiceResponse> apply(Throwable throwable) throws Exception {
+              return mapError(throwable);
+            }
+          });
     } catch (UnsupportedEncodingException e) {
       return Single.error(e);
     }
@@ -55,7 +63,7 @@ public class Service implements Repository {
 
     HttpException exception = (HttpException) throwable;
     if (exception.code() == NOT_FOUND) {
-      return Single.just(new ServiceResponse(null, Collections.emptyList()));
+      return Single.just(new ServiceResponse(null, Collections.<Animal>emptyList()));
     } else if (exception.code() == BAD_REQUEST) {
       return Single.error(new BadRequestException(exception.message(), exception));
     }

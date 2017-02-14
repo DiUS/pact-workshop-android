@@ -17,6 +17,7 @@ import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.PactFragment;
 import au.com.dius.pactconsumer.app.di.NetworkModule;
+import au.com.dius.pactconsumer.data.model.Animal;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.DateHelper;
 import io.reactivex.observers.TestObserver;
@@ -60,6 +61,6 @@ public class ServiceNoContentPactTest {
   public void should_process_the_json_payload_from_provider() {
     TestObserver<ServiceResponse> observer = service.fetchResponse(DATE_TIME).test();
     observer.assertNoErrors();
-    observer.assertValue(new ServiceResponse(null, Collections.emptyList()));
+    observer.assertValue(new ServiceResponse(null, Collections.<Animal>emptyList()));
   }
 }

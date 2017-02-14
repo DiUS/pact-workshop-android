@@ -1,5 +1,6 @@
 package au.com.dius.pactconsumer.domain;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -11,12 +12,12 @@ import au.com.dius.pactconsumer.R;
 import au.com.dius.pactconsumer.data.FakeService;
 import au.com.dius.pactconsumer.data.Repository;
 import au.com.dius.pactconsumer.data.exceptions.ServiceException;
+import au.com.dius.pactconsumer.data.model.Animal;
 import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.Logger;
 import au.com.dius.pactconsumer.util.TestRxBinder;
 import io.reactivex.Single;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,7 +38,7 @@ public class PresenterTest {
   @Test
   public void should_show_loaded_when_fetch_succeeds() {
     // given
-    when(repository.fetchResponse(any())).thenReturn(Single.just(FakeService.RESPONSE));
+    when(repository.fetchResponse(Mockito.<DateTime>any())).thenReturn(Single.just(FakeService.RESPONSE));
 
     // when
     presenter.onStart();
@@ -50,7 +51,7 @@ public class PresenterTest {
   public void should_show_error_when_fetch_fails() {
     // given
     ServiceException exception = new ServiceException();
-    when(repository.fetchResponse(any())).thenReturn(Single.error(exception));
+    when(repository.fetchResponse(Mockito.<DateTime>any())).thenReturn(Single.<ServiceResponse>error(exception));
 
     // when
     presenter.onStart();
@@ -62,7 +63,7 @@ public class PresenterTest {
   @Test
   public void should_show_empty_when_fetch_returns_nothing() {
     // given
-    when(repository.fetchResponse(any())).thenReturn(Single.just(new ServiceResponse(null, Collections.emptyList())));
+    when(repository.fetchResponse(Mockito.<DateTime>any())).thenReturn(Single.just(new ServiceResponse(null, Collections.<Animal>emptyList())));
 
     // when
     presenter.onStart();
@@ -74,7 +75,7 @@ public class PresenterTest {
   @Test
   public void should_show_loading_when_fetching() {
     // given
-    when(repository.fetchResponse(any())).thenReturn(Single.just(FakeService.RESPONSE));
+    when(repository.fetchResponse(Mockito.<DateTime>any())).thenReturn(Single.just(FakeService.RESPONSE));
 
     // when
     presenter.onStart();

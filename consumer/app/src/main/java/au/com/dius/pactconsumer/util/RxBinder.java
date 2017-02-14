@@ -17,9 +17,9 @@ public class RxBinder {
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   public <T> void bind(Observable<T> observable,
-                       Consumer<T> onNext,
-                       Consumer<Exception> onError,
-                       Action onComplete) {
+                       final Consumer<T> onNext,
+                       final Consumer<Exception> onError,
+                       final Action onComplete) {
     compositeDisposable.add(
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

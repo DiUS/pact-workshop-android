@@ -3,6 +3,7 @@ package au.com.dius.pactconsumer.data;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 
@@ -30,7 +31,7 @@ public class ServiceTest {
   public void should_process_json_payload_from_provider() {
     // given
     ServiceResponse response = ServiceResponse.create(DateTime.now(), Collections.singletonList(Animal.create("Doggy", "dog")));
-    when(api.loadProviderJson(any())).thenReturn(Single.just(response));
+    when(api.loadProviderJson(Mockito.<String>any())).thenReturn(Single.just(response));
 
     // when
     TestObserver<ServiceResponse> observer = service.fetchResponse(DateTime.now()).test();

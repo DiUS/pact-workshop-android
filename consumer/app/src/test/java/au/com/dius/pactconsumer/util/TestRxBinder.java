@@ -10,9 +10,9 @@ public class TestRxBinder extends RxBinder {
 
   @Override
   public <T> void bind(Observable<T> observable,
-                       Consumer<T> onNext,
-                       Consumer<Exception> onError,
-                       Action onComplete) {
+                       final Consumer<T> onNext,
+                       final Consumer<Exception> onError,
+                       final Action onComplete) {
     observable
         .subscribeWith(new DisposableObserver<T>() {
 

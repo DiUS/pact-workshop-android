@@ -15,6 +15,9 @@ import au.com.dius.pactconsumer.data.model.ServiceResponse;
 import au.com.dius.pactconsumer.util.Logger;
 import au.com.dius.pactconsumer.util.RxBinder;
 import io.reactivex.Observable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class Presenter implements Contract.Presenter {
 
@@ -39,7 +42,22 @@ public class Presenter implements Contract.Presenter {
   @Override
   public void onStart() {
     setLoading();
-    binder.bind(getAnimals(), this::setAnimals, this::setError, this::setComplete);
+    binder.bind(getAnimals(), new Consumer<List<Animal>>() {
+      @Override
+      public void accept(List<Animal> animals) throws Exception {
+        setAnimals(animals);
+      }
+    }, new Consumer<Exception>() {
+      @Override
+      public void accept(Exception e) throws Exception {
+        setError(e);
+      }
+    }, new Action() {
+      @Override
+      public void run() throws Exception {
+        setComplete();
+      }
+    });
   }
 
   @Override
@@ -50,7 +68,12 @@ public class Presenter implements Contract.Presenter {
   private Observable<List<Animal>> getAnimals() {
     return repository.fetchResponse(DateTime.now())
         .toObservable()
-        .map(ServiceResponse::getAnimals);
+        .map(new Function<ServiceResponse, List<Animal>>() {
+          @Override
+          public List<Animal> apply(ServiceResponse response) throws Exception {
+            return response.getAnimals();
+          }
+        });
   }
 
   private void setLoading() {
