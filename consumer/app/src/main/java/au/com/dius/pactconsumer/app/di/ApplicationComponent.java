@@ -1,7 +1,7 @@
 package au.com.dius.pactconsumer.app.di;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import javax.inject.Singleton;
 

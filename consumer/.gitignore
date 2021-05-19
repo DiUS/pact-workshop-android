@@ -9,3 +9,7 @@
 .externalNativeBuild
 app/target/pacts/*
 app/okhttp_cache/
+
+# Intellij
+.idea
+**/target/**
