@@ -1,7 +1,7 @@
 package au.com.dius.pactconsumer.app;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import au.com.dius.pactconsumer.app.di.ApplicationComponent;
 import au.com.dius.pactconsumer.app.di.ApplicationModule;

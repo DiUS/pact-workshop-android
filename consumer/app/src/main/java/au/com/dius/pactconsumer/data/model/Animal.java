@@ -1,7 +1,7 @@
 package au.com.dius.pactconsumer.data.model;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.moshi.Json;
 

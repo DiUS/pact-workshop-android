@@ -1,6 +1,6 @@
 package au.com.dius.pactconsumer.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import au.com.dius.pactconsumer.app.PactPresenter;
 import au.com.dius.pactconsumer.app.PactView;

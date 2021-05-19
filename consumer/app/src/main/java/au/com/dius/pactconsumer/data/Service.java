@@ -1,6 +1,6 @@
 package au.com.dius.pactconsumer.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 

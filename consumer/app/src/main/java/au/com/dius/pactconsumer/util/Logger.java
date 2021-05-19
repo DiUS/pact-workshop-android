@@ -1,6 +1,6 @@
 package au.com.dius.pactconsumer.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import javax.inject.Inject;
